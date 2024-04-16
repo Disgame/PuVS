@@ -1,0 +1,14 @@
+networks:
+  todo-network:
+
+services:
+  todo-api:
+    build: 
+      context: ./rocket_api
+      dockerfile: todo-api.dockerfile
+    image: todo-api:puvs
+    container_name: todo-api
+    ports:
+      - "8000:8000"
+    networks:
+      - todo-network
