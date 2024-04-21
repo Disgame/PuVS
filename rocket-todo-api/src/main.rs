@@ -1,10 +1,30 @@
 #[macro_use]
 extern crate rocket;
-
+use rocket::http::Header;
+use rocket::{Request, Response};
+use rocket::fairing::{Fairing, Info, Kind};
 use serde::{Serialize, Deserialize};
 
 use rocket::{response::status, serde::json::Json};
 
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+    fn info(&self) -> Info {
+        Info {
+            name: "Attaching CORS headers to responses",
+            kind: Kind::Response
+        }
+    }
+
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
+        response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct Todo {
@@ -45,6 +65,7 @@ fn delete_todo_by_name(name: &str) -> status::NoContent {
 #[launch]
 fn rocket() -> _ {
     rocket::build()
+        .attach(CORS)
         .mount("/", routes![hello])
         .mount("/", routes![get_todos])
         .mount("/", routes![get_todo_by_name])
