@@ -4,7 +4,7 @@ networks:
 services:
   todo-api:
     build: 
-      context: ./rocket_api
+      context: ./rocket-todo-api
       dockerfile: todo-api.dockerfile
     image: todo-api:puvs
     container_name: todo-api
@@ -12,3 +12,16 @@ services:
       - "8000:8000"
     networks:
       - todo-network
+
+  todo-web:
+    build: 
+      context: ./yew-todo-web
+      dockerfile: todo-web.dockerfile
+    image: todo-web:puvs
+    container_name: todo-web
+    ports:
+      - "8080:8080"
+    networks:
+      - todo-network
+    depends_on:
+      - todo-api
