@@ -1,5 +1,5 @@
-[[proxy]]
-backend = "http://localhost:8000/"
+#[[proxy]]
+#backend = "http://localhost:8000/"
 
 [serve]
 address = "0.0.0.0"

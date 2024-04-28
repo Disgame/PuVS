@@ -1,14 +1,28 @@
 #[macro_use]
 extern crate rocket;
-use rocket::http::Header;
-use rocket::{Request, Response};
-use rocket::fairing::{Fairing, Info, Kind};
-use serde::{Serialize, Deserialize};
 
-use rocket::{response::status, serde::json::Json};
-
+use rocket::{
+    fairing::{
+        Fairing, 
+        Info, 
+        Kind
+    },
+    http::{
+        Header,
+        Status
+    },
+    Request, 
+    Response,
+    response::{
+        status,
+        Redirect
+    }
+};
+use serde_json::json;
+/*
+https://stackoverflow.com/questions/62412361/how-to-set-up-cors-or-options-for-rocket-rs/69342225#69342225 
+*/
 pub struct CORS;
-
 #[rocket::async_trait]
 impl Fairing for CORS {
     fn info(&self) -> Info {
@@ -20,56 +34,50 @@ impl Fairing for CORS {
 
     async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
-        response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
+        response.set_header(Header::new("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS"));
         response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
         response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
     }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Todo {
-    name: String,
-    completed: bool,
-}
-
+/* API Routes*/
 #[get("/")]
 fn hello() -> &'static str {
-    "Hello, Todo List!"
+    "Hello, this is my Todos Application, see them at /todos!\nCreate a new one with POST /todos/<name>\nDelete one with DELETE /todos/<name>"
 }
 
 #[get("/todos")] // <- returns a list of todos
-fn get_todos() -> &'static str {
-    "Here are all the todos"
+fn get_todos() -> status::Custom<String> {
+    let todos = vec![
+        "new todo".to_string(),
+        "another todo".to_string(),
+        "yet another todo".to_string(),
+    ];
+    let todos_json = json!(&todos);
+    status::Custom(Status::Ok, todos_json.to_string())
 }
 
-#[get("/todos/<name>")] // <- returns a single todo
-fn get_todo_by_name(name: &str) -> String {
-    format!("Here is the todo with name: {}", name)
-}
-
-#[post("/todos", data = "<todo>")] // <- creates a new todo
-fn create_todo(todo: Json<Todo>) -> status::Created<Json<Todo>> {
-    status::Created::new("/todos").body(todo)
-}
-
-#[put("/todos", data = "<todo>")] // <- updates a todo
-fn update_todo(todo: Json<Todo>) -> Json<Todo> {    
-    todo
+#[post("/todos/<name>")] // <- creates a new todo
+fn create_todo(name: &str) -> status::Custom<String> {
+    status::Custom(Status::Ok, name.to_string())
 }
 
 #[delete("/todos/<name>")] // <- deletes a todo
-fn delete_todo_by_name(name: &str) -> status::NoContent {
-    status::NoContent
+fn delete_todo_by_name(name: &str) -> status::Custom<String> {
+    status::Custom(Status::Ok, name.to_string())
 }
 
+/* Catchers */
+#[catch(default)]
+fn erro_redirect() -> rocket::response::Redirect {
+    Redirect::to("/")
+}
+
+/* Rocket Application */
 #[launch]
 fn rocket() -> _ {
     rocket::build()
         .attach(CORS)
-        .mount("/", routes![hello])
-        .mount("/", routes![get_todos])
-        .mount("/", routes![get_todo_by_name])
-        .mount("/", routes![create_todo])
-        .mount("/", routes![update_todo])
-        .mount("/", routes![delete_todo_by_name])
+        .mount("/", routes![hello, get_todos, create_todo, delete_todo_by_name])
+        .register("/", catchers![erro_redirect])
 }

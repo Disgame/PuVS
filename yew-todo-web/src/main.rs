@@ -1,10 +1,9 @@
 use yew::prelude::*;
 use yew::Renderer;
-//use yew::services::fetch::{FetchService, FetchTask, Request, Response};
 
 
-#[function_component]
-pub fn App() -> Html {
+#[function_component(App)]
+pub fn app() -> Html {
     html! {
         <div>
             <h1>{"Yew Todo App"}</h1>
@@ -14,5 +13,5 @@ pub fn App() -> Html {
 }
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    Renderer::<App>::new().render();
 }
