@@ -2,6 +2,17 @@ networks:
   todo-network:
 
 services:
+  todo-db:
+    build:
+      context: ./mongoDB-todo-db
+      dockerfile: todo-db.dockerfile
+    image: todo-db:puvs
+    container_name: todo-db
+    ports:
+      - "27017:27017"
+    networks:
+      - todo-network
+
   todo-api:
     build: 
       context: ./rocket-todo-api
@@ -12,6 +23,8 @@ services:
       - "8000:8000"
     networks:
       - todo-network
+    depends_on:
+      - todo-db
 
   todo-web:
     build: 
