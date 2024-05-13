@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
+use std::future::IntoFuture;
+
 use rocket::{
     fairing::{
         Fairing, 
@@ -19,6 +21,8 @@ use rocket::{
     }
 };
 use serde_json::json;
+
+mod db;
 /*
 https://stackoverflow.com/questions/62412361/how-to-set-up-cors-or-options-for-rocket-rs/69342225#69342225 
 */
@@ -47,23 +51,20 @@ fn hello() -> &'static str {
 }
 
 #[get("/todos")] // <- returns a list of todos
-fn get_todos() -> status::Custom<String> {
-    let todos = vec![
-        "new todo".to_string(),
-        "another todo".to_string(),
-        "yet another todo".to_string(),
-    ];
-    let todos_json = json!(&todos);
-    status::Custom(Status::Ok, todos_json.to_string())
+async fn get_todos() -> status::Custom<String> {
+    let todos = db::fetch_todos().await;
+    status::Custom(Status::Ok, todos.join(", "))
 }
 
 #[post("/todos/<name>")] // <- creates a new todo
-fn create_todo(name: &str) -> status::Custom<String> {
+async fn create_todo(name: &str) -> status::Custom<String> {
+    db::create_todo(name.to_string()).await;
     status::Custom(Status::Ok, name.to_string())
 }
 
 #[delete("/todos/<name>")] // <- deletes a todo
-fn delete_todo_by_name(name: &str) -> status::Custom<String> {
+async fn delete_todo_by_name(name: &str) -> status::Custom<String> {
+    db::delete_todo_by_name(name.to_string()).await;
     status::Custom(Status::Ok, name.to_string())
 }
 

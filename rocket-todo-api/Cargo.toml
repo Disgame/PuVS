@@ -20,3 +20,6 @@ version = "1.0.196"
 [dependencies.serde_json]
 default-features = false
 version = "1.0.112"
+
+[dependencies.mongodb]
+version = "2.8.2"
