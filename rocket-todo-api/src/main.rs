@@ -1,8 +1,6 @@
 #[macro_use]
 extern crate rocket;
 
-use std::future::IntoFuture;
-
 use rocket::{
     fairing::{
         Fairing, 
@@ -20,7 +18,6 @@ use rocket::{
         Redirect
     }
 };
-use serde_json::json;
 
 mod db;
 /*
@@ -53,7 +50,8 @@ fn hello() -> &'static str {
 #[get("/todos")] // <- returns a list of todos
 async fn get_todos() -> status::Custom<String> {
     let todos = db::fetch_todos().await;
-    status::Custom(Status::Ok, todos.join(", "))
+    let formatted_todos = format!("[{}]", todos.join(", "));
+    status::Custom(Status::Ok, formatted_todos)
 }
 
 #[post("/todos/<name>")] // <- creates a new todo

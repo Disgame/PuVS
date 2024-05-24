@@ -26,15 +26,15 @@ services:
     depends_on:
       - todo-db
 
-  todo-web:
-    build: 
-      context: ./yew-todo-web
-      dockerfile: todo-web.dockerfile
-    image: todo-web:puvs
-    container_name: todo-web
-    ports:
-      - "8080:8080"
-    networks:
-      - todo-network
-    depends_on:
-      - todo-api
+#  todo-web:
+#    build: 
+#      context: ./yew-todo-web
+#      dockerfile: todo-web.dockerfile
+#    image: todo-web:puvs
+#    container_name: todo-web
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - todo-network
+#    depends_on:
+#      - todo-api
