@@ -12,38 +12,32 @@ The application is implemented using the following frameworks
 
 ### ~~Yew.rs~~ [🕳](https://yew.rs) (not required to be implemented)
 
-* "**Yew **is a modern Rust framework for creating multi-threaded front-end web apps with WebAssembly." [©](https://github.com/yewstack/yew)
+* "**Yew** is a modern Rust framework for creating multi-threaded front-end web apps with WebAssembly." [©](https://github.com/yewstack/yew)
 
 ## Usage
 
-Prerequisites
+### Prerequisites
 
-* Docker installed
+* [Docker](https://docs.docker.com/engine/install/) installed
 
-Installation
+### Installation
 
 1. Clone this repository to your local machine:
 
-```markdown
-    ```bash
-    git clone https://github.com/Disgame/PuVS.git
-    ```
+```bash
+git clone https://github.com/Disgame/PuVS.git
 ```
 
 2. Navigate to the project directory:
 
-```markdown
-    ```bash
-    cd PuVS
-    ```
+```bash
+cd PuVS
 ```
 
 3. Run docker compose
 
-```markdown
-    ```bash
-    docker compose -f "docker-compose-rust.yml" up (--build to rebuild it locally)
-    ```
+```bash
+docker compose -f "docker-compose-rust.yml" up (--build to rebuild it locally)
 ```
 
 ## Docker Compose Configuration
@@ -61,7 +55,7 @@ The services are connected to the same network (`todo-network`), allowing them t
 
 Returns a welcome message with information about the available endpoints.
 
-```less
+```
 
 Hello, this is my Todos Application, see them at /todos!
 
@@ -98,9 +92,7 @@ POST /todos/ExampleTodo
 Example Response:
 
 ```arduino
-
 "ExampleTodo"
-
 ```
 
 ### `DELETE /todos/<name>`
@@ -118,9 +110,7 @@ DELETE /todos/ExampleTodo
 Example Response:
 
 ```arduino
-
 "ExampleTodo"
-
 ```
 
 ### Error Handling
