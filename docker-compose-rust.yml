@@ -3,10 +3,7 @@ networks:
 
 services:
   todo-db:
-    build:
-      context: ./mongoDB-todo-db
-      dockerfile: todo-db.dockerfile
-    image: disgame/lab:todo-db
+    image: mongo:latest
     container_name: todo-db
     ports:
       - "27017:27017"
@@ -36,5 +33,19 @@ services:
 #      - "8080:8080"
 #    networks:
 #      - todo-network
-#    depends_on:
+#    depends_on:  
 #      - todo-api
+
+  todoui-thymeleaf:
+    #image: maeddes/todoui-thymeleaf:v2404
+    build:
+      context: ./sample/otel-in-action/todoui-thymeleaf
+      dockerfile: Dockerfile
+    networks:
+      - todo-network
+    ports:
+      - "8090:8090"
+    environment:
+      - BACKEND_URL=http://todo-api:8000
+    depends_on:
+      - todo-api

@@ -15,6 +15,8 @@ use rocket::{
     Response,
     response::{
         status,
+        content,
+        content::RawJson,
         Redirect
     }
 };
@@ -42,16 +44,20 @@ impl Fairing for CORS {
 }
 
 /* API Routes*/
-#[get("/")]
+/* #[get("/")]
 fn hello() -> &'static str {
     "Hello, this is my Todos Application, see them at /todos!\nCreate a new one with POST /todos/<name>\nDelete one with DELETE /todos/<name>"
-}
+} */
 
 #[get("/todos")] // <- returns a list of todos
-async fn get_todos() -> status::Custom<String> {
+async fn get_todos() -> status::Custom<RawJson<String>> {
     let todos = db::fetch_todos().await;
-    let formatted_todos = format!("[{}]", todos.join(", "));
-    status::Custom(Status::Ok, formatted_todos)
+    let formatted_todos: String = todos.iter()
+        .map(|todo| format!("\"{}\"", todo))
+        .collect::<Vec<String>>()
+        .join(", ");
+    let json_todos = format!("[{}]", formatted_todos);
+    status::Custom(Status::Ok, content::RawJson(json_todos))
 }
 
 #[post("/todos/<name>")] // <- creates a new todo
@@ -77,6 +83,6 @@ fn erro_redirect() -> rocket::response::Redirect {
 fn rocket() -> _ {
     rocket::build()
         .attach(CORS)
-        .mount("/", routes![hello, get_todos, create_todo, delete_todo_by_name])
+        .mount("/", routes![get_todos, create_todo, delete_todo_by_name])
         .register("/", catchers![erro_redirect])
 }
