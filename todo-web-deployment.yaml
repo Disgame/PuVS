@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-web
+  name: todo-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-web
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-web
+        tier: frontend
+    spec:
+      containers:
+      - image: disgame/lab:todo-web
+        name: lab
+        resources: {}
+status: {}

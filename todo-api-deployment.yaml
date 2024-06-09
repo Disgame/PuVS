@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-api
+  template:
+    metadata:
+      name: todo-api
+      labels:
+        app: todo-api
+        tier: backend
+    spec:
+      containers:
+      - name: todo-api
+        image: disgame/lab:todo-api
+      restartPolicy: Always

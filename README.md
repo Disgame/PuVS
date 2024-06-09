@@ -119,15 +119,7 @@ The API provides a default error handler to redirect to the root path (/) in cas
 
 ## Docker Build & Using Docker Hub
 
-First, we need to build the images we want to publish.
-
-Todo Database:
-
-```bash
-cd mongoDB-todo-db
-
-docker build -t disgame/lab:todo-api -f "todo-api.dockerfile" .
-```
+First, we need to build the image we want to publish.
 
 Todo Backend:
 
@@ -137,7 +129,6 @@ cd rocket-todo-api
 docker build -t disgame/lab:todo-api -f "todo-api.dockerfile" .
 ```
 
-
 ### Docker Hub
 
 Next, we'll login and push our images to our Docker Hub repository.
@@ -146,6 +137,46 @@ Next, we'll login and push our images to our Docker Hub repository.
 docker login
 
 docker push disgame/lab:todo-api
+```
 
-docker push disgame/lab:todo-db
+## Kubernetes
+
+To deploy the todo application on a Kubernetes cluster running on Docker Desktop, follow these steps:
+
+### Prerequisites
+
+* Ensure that [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and Kubernetes is enabled.
+* `kubectl` should be installed and configured to communicate with your Docker Desktop Kubernetes cluster.
+
+### Deployment Steps
+
+1. Navigate to the PuVS directory:
+
+```
+cd PuVS
+```
+
+2. Apply the Kubernetes configurations:
+
+```
+kubectl apply -f todo-db-deployment.yaml
+kubectl apply -f todo-db-service.yaml
+kubectl apply -f todo-api-deployment.yaml
+kubectl apply -f todo-api-service.yaml
+kubectl apply -f todo-web-deployment.yaml
+kubectl apply -f todo-web-service.yaml
+```
+
+3. Check if everything is running:
+
+```
+kubectl get deployments,services
+```
+
+4. Forward Ports:
+
+```
+kubectl port-forward service/todo-db 27017:27017
+kubectl port-forward service/todo-api 8000:8000
+kubectl port-forward service/todo-web 8090:8090
 ```

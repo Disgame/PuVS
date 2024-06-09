@@ -14,7 +14,7 @@ services:
     build: 
       context: ./rocket-todo-api
       dockerfile: todo-api.dockerfile
-    image: disgame/lab:todo-api
+    #image: disgame/lab:todo-api
     container_name: todo-api
     ports:
       - "8000:8000"
@@ -38,6 +38,7 @@ services:
 
   todoui-thymeleaf:
     #image: maeddes/todoui-thymeleaf:v2404
+    image: disgame/lab:todo-web
     build:
       context: ./sample/otel-in-action/todoui-thymeleaf
       dockerfile: Dockerfile
