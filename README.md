@@ -147,6 +147,10 @@ To deploy the todo application on a Kubernetes cluster running on Docker Desktop
 
 * Ensure that [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and Kubernetes is enabled.
 * `kubectl` should be installed and configured to communicate with your Docker Desktop Kubernetes cluster.
+* ```
+  kubectl create deployment todo-* --image=disgame/lab:* --dry-run=client -o yaml > todo-*-deployment.yaml
+  kubectl expose deployment todo-* --port=* --dry-run=client -o yaml > todo-*-service.yaml
+  ```
 
 ### Deployment Steps
 

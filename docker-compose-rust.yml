@@ -10,14 +10,19 @@ services:
     networks:
       - todo-network
 
+# disgame/lab:todo-api -> disgame/todo-api:1.0.0
   todo-api:
     build: 
       context: ./rocket-todo-api
       dockerfile: todo-api.dockerfile
-    #image: disgame/lab:todo-api
+    image: disgame/lab:todo-api
     container_name: todo-api
     ports:
       - "8000:8000"
+    environment:
+      - DATABASE_URL=todo-db:27017
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=8000
     networks:
       - todo-network
     depends_on:

@@ -1,11 +1,13 @@
 extern crate mongodb;
 
+use std::env::var;
 use mongodb::bson::{doc, Document};
 use mongodb::{Client, options::ClientOptions};
 use rocket::futures::StreamExt;
 
+
 async fn connect() -> mongodb::Database {
-    let client_options = ClientOptions::parse("mongodb://todo-db:27017").await.unwrap();
+    let client_options = ClientOptions::parse(format!("mongodb://{}", var("DATABASE_URL").unwrap())).await.unwrap();
     let client = Client::with_options(client_options).unwrap();
     let db = client.database("todo");
     db.create_collection("todos", None).await.unwrap();
