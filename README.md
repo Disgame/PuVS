@@ -154,21 +154,16 @@ To deploy the todo application on a Kubernetes cluster running on Docker Desktop
 
 ### Deployment Steps
 
-1. Navigate to the PuVS directory:
+1. Navigate to the PuVS k8s directory:
 
 ```
-cd PuVS
+cd PuVS/k8s
 ```
 
 2. Apply the Kubernetes configurations:
 
 ```
-kubectl apply -f todo-db-deployment.yaml
-kubectl apply -f todo-db-service.yaml
-kubectl apply -f todo-api-deployment.yaml
-kubectl apply -f todo-api-service.yaml
-kubectl apply -f todo-web-deployment.yaml
-kubectl apply -f todo-web-service.yaml
+kubectl apply -f .
 ```
 
 3. Check if everything is running:
