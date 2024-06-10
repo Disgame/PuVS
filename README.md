@@ -179,3 +179,9 @@ kubectl port-forward service/todo-db 27017:27017
 kubectl port-forward service/todo-api 8000:8000
 kubectl port-forward service/todo-web 8090:8090
 ```
+
+5. Scale
+
+```
+kubectl scale deployment todo-* --replicas=<number>
+```

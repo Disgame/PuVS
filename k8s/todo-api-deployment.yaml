@@ -17,4 +17,24 @@ spec:
       containers:
       - name: todo-api
         image: disgame/lab:todo-api
+        resources:
+          requests:
+            memory: "1G"
+            cpu: "250m"
+          limits:
+            memory: "1G"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /todos
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 1
+        livenessProbe:
+          httpGet:
+            path: /todos
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 1
+          failureThreshold: 3
       restartPolicy: Always
